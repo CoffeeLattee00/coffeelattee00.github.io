@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ahmet Faruk Efe - Engineering Insights & Blog.">
+    <title>Insights | Ahmet Faruk Efe</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+    <header id="main-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Ahmet Faruk Efe</a>
+
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="work.html" data-key="nav_work">My Works</a></li>
+                    <li><a href="insights.html" class="active" data-key="nav_insights">Technical Blogs</a></li>
+                    <li><a href="index.html" data-key="nav_home">Home</a></li>
+                    <li><a href="lifestyle.html" data-key="nav_lifestyle">Lifestyle</a></li>
+                    <li><a href="contact.html" data-key="nav_contact">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="lang-switch">
+                <button id="btn-en">EN</button>
+                <span class="divider">/</span>
+                <button id="btn-tr">TR</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content container">
+        <section class="section-padding">
+            <div class="section-header">
+                <h1 class="section-title" data-key="insights_title">Engineering Insights</h1>
+                <p data-key="insights_desc" style="color: rgba(240,242,245,0.6); margin-top: 10px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    My personal deductions, AI strategies, and technical analyses on not just 'how' technology works, but how we should approach it.
+                </p>
+            </div>
+
+            <!-- Dinamik Blog Grid -->
+            <div class="blog-grid" id="blog-grid-container">
+                <!-- Blog kartları buraya JS ile yüklenecek -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <span class="footer-logo">AHMET FARUK EFE</span>
+                    <p class="footer-text" data-key="footer_text">Engineering the future with passion and precision.</p>
+                </div>
+
+                <div class="footer-links">
+                    <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+                    <a href="https://github.com" target="_blank">GitHub</a>
+                    <a href="mailto:contact@ahmetfarukefe.com">Email</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 Ahmet Faruk Efe. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/insights.js"></script>
+</body>
+
+</html>

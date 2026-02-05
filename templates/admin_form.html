@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if action == 'new' %}Yeni Ekle{% else %}Düzenle{% endif %} - Admin CMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        {% if action == 'new' %}Yeni İçerik Ekle{% else %}İçeriği Düzenle{% endif %}
+                    </h4>
+                    <a href="/admin" class="btn btn-sm btn-light">Panele Dön</a>
+                </div>
+                <div class="card-body">
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        
+                        <!-- Common Metadata -->
+                        <h5 class="text-primary border-bottom pb-2">Genel Bilgiler</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Kategori</label>
+                                <select class="form-select" name="category" required>
+                                    <option value="" disabled {% if not post %}selected{% endif %}>Seçiniz...</option>
+                                    <option value="Projects" {% if post and post.category == 'Projects' %}selected{% endif %}>Projeler (Projects)</option>
+                                    <option value="Opinions" {% if post and post.category == 'Opinions' %}selected{% endif %}>Görüşler (Opinions/Blog)</option>
+                                    <option value="Lifestyle" {% if post and post.category == 'Lifestyle' %}selected{% endif %}>Yaşam Tarzı (Lifestyle)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Yayın Tarihi</label>
+                                <input type="date" class="form-control" name="publish_date" value="{{ post.publish_date if post else '' }}" required>
+                            </div>
+                        </div>
+
+                        <!-- Language Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="langTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="tr-tab" data-bs-toggle="tab" data-bs-target="#tr-content" type="button" role="tab"><span class="badge bg-danger me-1">TR</span> Türkçe</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="en-tab" data-bs-toggle="tab" data-bs-target="#en-content" type="button" role="tab"><span class="badge bg-primary me-1">EN</span> English</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content mb-4" id="langTabContent">
+                            <!-- Turkish Data -->
+                            <div class="tab-pane fade show active border p-3 rounded-bottom" id="tr-content" role="tabpanel">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Türkçe Başlık</label>
+                                    <input type="text" class="form-control" name="title_tr" value="{{ post.title_tr if post else '' }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Türkçe Özet (Summary)</label>
+                                    <textarea class="form-control" name="summary_tr" rows="2">{{ post.summary_tr if post else '' }}</textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">İçerik (Markdown)</label>
+                                    <textarea class="form-control font-monospace" name="content_tr" rows="10" style="font-size: 0.9rem;">{{ post.content_tr if post else '' }}</textarea>
+                                    <div class="form-text text-muted">Mevcut içeriği buradan direkt düzenleyebilirsiniz.</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-danger">VEYA Dosya Yükle (.md)</label>
+                                    <input type="file" class="form-control" name="markdown_file_tr" accept=".md" {% if action == 'new' %}required{% endif %}>
+                                    <div class="form-text">Dosya yüklerseniz yukarıdaki yazı <strong>silinip</strong> dosya içeriği kullanılacaktır.</div>
+                                </div>
+                            </div>
+
+                            <!-- English Data -->
+                            <div class="tab-pane fade border p-3 rounded-bottom" id="en-content" role="tabpanel">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">English Title</label>
+                                    <input type="text" class="form-control" name="title_en" value="{{ post.title_en if post else '' }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">English Summary</label>
+                                    <textarea class="form-control" name="summary_en" rows="2">{{ post.summary_en if post else '' }}</textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Content (Markdown)</label>
+                                    <textarea class="form-control font-monospace" name="content_en" rows="10" style="font-size: 0.9rem;">{{ post.content_en if post else '' }}</textarea>
+                                     <div class="form-text text-muted">You can edit the content directly here.</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-danger">OR Upload File (.md)</label>
+                                    <input type="file" class="form-control" name="markdown_file_en" accept=".md">
+                                    <div class="form-text">If you upload a file, it will overwrite the text above.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shared Files -->
+                        <h5 class="text-primary border-bottom pb-2 mt-4">Ortak Dosyalar & Resimler</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Kapak Resmi (Cover Image)</label>
+                            {% if post and post.cover_image %}
+                                <div class="mb-2">
+                                    <img src="{{ post.cover_image }}" alt="Current Cover" style="height: 100px; border: 1px solid #ddd; padding: 2px;">
+                                    <span class="text-muted small ms-2">Mevcut resim</span>
+                                </div>
+                            {% endif %}
+                            <input type="file" class="form-control" name="cover_image" accept="image/*" {% if action == 'new' %}required{% endif %}>
+                            <div class="form-text">Hem Türkçe hem İngilizce içerikte kullanılacak ortak kapak resmi.</div>
+                        </div>
+
+                        {% if existing_images %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mevcut İçerik Resimleri (Sunucuda Var)</label>
+                            <div class="d-flex flex-wrap gap-2 border p-2 bg-white rounded">
+                                {% for img in existing_images %}
+                                <div class="text-center p-1 border rounded" style="width: 100px; background: #f8f9fa;">
+                                    <a href="{{ img.url }}" target="_blank">
+                                        <img src="{{ img.url }}" class="img-fluid mb-1" style="height: 60px; object-fit: cover;">
+                                    </a>
+                                    <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ img.name }}">{{ img.name }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-text">Bu klasörde bulunan resimler. Markdown içinde <code>![alt](resim_adi.png)</code> şeklinde kullanabilirsiniz.</div>
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Yeni İçerik Resimleri Ekle</label>
+                            <input type="file" class="form-control" name="content_images" accept="image/*" multiple>
+                            <div class="form-text">
+                                Her iki dildeki Markdown dosyasında kullanılan <strong>TÜM YENİ</strong> resimleri buraya seçin.<br>
+                                Sistem, resim isimlerini her iki markdown dosyası için de otomatik eşleştirecektir.
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {% if action == 'new' %}Yükle ve Yayınla{% else %}Değişiklikleri Kaydet{% endif %}
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

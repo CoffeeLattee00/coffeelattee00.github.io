@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article - Ahmet Faruk Efe</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Markdown Parser (Marked) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Math Formula Support (MathJax) -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+
+<body>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Ahmet Faruk Efe</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="work.html" data-key="nav_work">My Works</a></li>
+                    <li><a href="insights.html" data-key="nav_insights">Technical Blogs</a></li>
+                    <li><a href="index.html" data-key="nav_home">Home</a></li>
+                    <li><a href="lifestyle.html" data-key="nav_lifestyle">Lifestyle</a></li>
+                    <li><a href="contact.html" data-key="nav_contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="lang-switch">
+                <button id="btn-en">EN</button>
+                <span class="divider">/</span>
+                <button id="btn-tr" class="active">TR</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <main class="article-page">
+        <div id="loading" class="loading-message">Loading article...</div>
+
+        <div id="article-container" style="display: none;">
+            <div class="article-header">
+                <div class="article-meta">
+                    <span id="art-date"></span>
+                </div>
+                <h1 id="art-title" class="article-title"></h1>
+            </div>
+
+            <img id="art-img" class="article-cover" src="" alt="Cover Image">
+
+            <div class="article-container-wrapper">
+                <!-- Main Content -->
+                <div id="art-content" class="markdown-content">
+                    <!-- Markdown Rendered Here -->
+                </div>
+
+                <!-- Sidebar TOC -->
+                <aside class="toc-container">
+                    <div class="toc-title" data-key="toc_title">Table of Contents</div>
+                    <div id="toc-list"></div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                &copy; 2026 Ahmet Faruk Efe. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/article.js"></script>
+</body>
+
+</html>
