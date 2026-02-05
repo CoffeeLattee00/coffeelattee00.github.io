@@ -40,7 +40,6 @@ class Post(db.Model):
 
     def to_dict(self):
         """JSON serileştirme: Frontend yapısına uygun format"""
-        # Türkçe Varsayılan (Default)
         data = {
             'id': self.id,
             'title': self.title_tr,
