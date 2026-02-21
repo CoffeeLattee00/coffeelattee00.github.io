@@ -21,6 +21,7 @@
                 <div class="card-body">
                     
                     <form method="POST" enctype="multipart/form-data">
+                        {{ csrf_token() }}
                         
                         <!-- Common Metadata -->
                         <h5 class="text-primary border-bottom pb-2">Genel Bilgiler</h5>

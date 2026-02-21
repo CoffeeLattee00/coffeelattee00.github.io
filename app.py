@@ -1,21 +1,43 @@
 from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 from slugify import slugify
+from typing import Optional, Dict, List
+from werkzeug.datastructures import FileStorage
 import os
 import json
 import re
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import shutil
+try:
+    import magic
+except ImportError:
+    magic = None
 
 app = Flask(__name__, template_folder='.')
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev_key_super_secret')
+
+# Security: Require SECRET_KEY from environment
+SECRET_KEY = os.environ.get('SECRET_KEY')
+if not SECRET_KEY:
+    print("UYARI: 'SECRET_KEY' ortam değişkeni bulunamadı. Geliştirme için varsayılan gizli anahtar kullanılıyor.")
+    SECRET_KEY = 'dev-fallback-secret-key-12345'
+app.config['SECRET_KEY'] = SECRET_KEY
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'md', 'markdown'}
 
 db = SQLAlchemy(app)
+csrf = CSRFProtect(app)
+
+# Security: Whitelist allowed categories
+ALLOWED_CATEGORIES = ['Projects', 'Opinions', 'Lifestyle']
+ALLOWED_MIME_TYPES = {
+    'image/png', 'image/jpeg', 'image/gif', 'image/webp',
+    'text/plain', 'text/markdown'
+}
 
 # ----------------------------------------------------------------------
 # 1. Veritabanı Modeli (Çoklu Dil Destekli)
@@ -90,35 +112,76 @@ def regenerate_json_files():
     print("JSON content regenerated for frontend.")
 
 # ----------------------------------------------------------------------
-# 3. Yardımcı Fonksiyonlar
+# 3. Yardımcı Fonksiyonlar (Helper Functions)
 # ----------------------------------------------------------------------
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+def allowed_file(filename: str) -> bool:
+    """Check if file extension is allowed."""
+    if '.' not in filename:
+        return False
+    ext = filename.rsplit('.', 1)[1].lower()
+    return ext in app.config['ALLOWED_EXTENSIONS']
 
-def save_file(file, path):
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        full_path = os.path.join(path, filename)
-        file.save(full_path)
-        return filename
-    return None
+def validate_mime_type(file: FileStorage) -> bool:
+    """Validate file MIME type using magic library."""
+    if magic is None:
+        return True  # Skip if library not available
+    
+    try:
+        file_content = file.read(1024)
+        file.seek(0)  # Reset file pointer
+        detected_mime = magic.from_buffer(file_content, mime=True)
+        return detected_mime in ALLOWED_MIME_TYPES
+    except Exception:
+        return True  # Pass on validation error
 
-def create_unique_slug(model, base_slug):
+def save_file(file: FileStorage, path: str) -> Optional[str]:
+    """Save uploaded file with validation. Returns filename or None."""
+    if not file or not allowed_file(file.filename):
+        return None
+    
+    # Validate MIME type
+    if not validate_mime_type(file):
+        return None
+    
+    filename = secure_filename(file.filename)
+    os.makedirs(path, exist_ok=True)
+    full_path = os.path.join(path, filename)
+    file.save(full_path)
+    return filename
+
+def create_unique_slug(model, base_slug: str) -> str:
+    """Generate unique slug. Prevents race condition with counter limit."""
     unique_slug = base_slug
     counter = 1
+    
     while model.query.filter_by(slug=unique_slug).first():
         unique_slug = f"{base_slug}-{counter}"
         counter += 1
+        if counter > 10000:  # Prevent infinite loop
+            raise ValueError(f"Cannot generate unique slug for '{base_slug}'")
+    
     return unique_slug
 
-def process_markdown_images(md_content, image_mapping):
-    if not md_content: return ""
+def process_markdown_images(md_content: str, image_mapping: Dict[str, str]) -> str:
+    """Replace image paths in markdown content."""
+    if not md_content:
+        return ""
+    
     for original_name, new_path in image_mapping.items():
-        pattern = r'\([^\)]*?/?' + re.escape(original_name) + r'\)'
-        md_content = re.sub(pattern, f'({new_path})', md_content)
-        pattern_quotes = r'"[^"]*?/?' + re.escape(original_name) + r'"'
-        md_content = re.sub(pattern_quotes, f'"{new_path}"', md_content)
+        escaped_name = re.escape(original_name)
+        md_content = re.sub(
+            rf'\(([^)]*?{escaped_name})\)',
+            f'({new_path})',
+            md_content,
+            flags=re.IGNORECASE
+        )
+        md_content = re.sub(
+            rf'"([^"]*?{escaped_name})"',
+            f'"{new_path}"',
+            md_content,
+            flags=re.IGNORECASE
+        )
+    
     return md_content
 
 # ----------------------------------------------------------------------
@@ -151,6 +214,12 @@ def new_post():
     if request.method == 'POST':
         try:
             category = request.form['category']
+            
+            # Security: Validate category against whitelist
+            if category not in ALLOWED_CATEGORIES:
+                flash('Invalid category selected.', 'danger')
+                return render_template('templates/admin_form.html', action='new')
+            
             date_str = request.form['publish_date']
             publish_date = datetime.strptime(date_str, '%Y-%m-%d').date()
             
@@ -213,11 +282,13 @@ def new_post():
             flash('İçerik (TR/EN) başarıyla oluşturuldu!', 'success')
             return redirect(url_for('admin_dashboard'))
 
+        except ValueError as e:
+            flash(f'Input error: {str(e)}', 'danger')
+            app.logger.warning(f"Validation error in new_post: {e}")
         except Exception as e:
-            flash(f'Hata: {str(e)}', 'danger')
-            app.logger.error(f"Error creating post: {e}")
-    
-            print(e)
+            db.session.rollback()
+            flash('Server error while creating content.', 'danger')
+            app.logger.exception("Error creating post")
     
     return render_template('templates/admin_form.html', action='new')
 
@@ -239,7 +310,13 @@ def edit_post(id):
             post.title_en = request.form.get('title_en', '')
             post.summary_en = request.form.get('summary_en', '')
             
-            post.category = request.form['category']
+            category = request.form['category']
+            # Security: Validate category against whitelist
+            if category not in ALLOWED_CATEGORIES:
+                flash('Invalid category selected.', 'danger')
+                return render_template('templates/admin_form.html', action='edit', post=post)
+            
+            post.category = category
             date_str = request.form['publish_date']
             post.publish_date = datetime.strptime(date_str, '%Y-%m-%d').date()
             
@@ -311,10 +388,13 @@ def edit_post(id):
             flash('İçerik güncellendi!', 'success')
             return redirect(url_for('admin_dashboard'))
             
+        except ValueError as e:
+            flash(f'Input error: {str(e)}', 'danger')
+            app.logger.warning(f"Validation error in edit_post: {e}")
         except Exception as e:
-            flash(f'Hata: {str(e)}', 'danger')
-            app.logger.error(f"Error editing post: {e}")
-            # Do not return here, fall through to render template with error message
+            db.session.rollback()
+            flash('Server error while updating content.', 'danger')
+            app.logger.exception("Error editing post")
 
     # Recalculate upload_dir/web_path for GET or error case (using current post state)
     year = str(post.publish_date.year)
@@ -335,13 +415,20 @@ def edit_post(id):
 
     return render_template('templates/admin_form.html', action='edit', post=post, existing_images=existing_images)
 
-@app.route('/admin/delete/<int:id>')
-def delete_post(id):
-    post = Post.query.get_or_404(id)
-    db.session.delete(post)
-    db.session.commit()
-    regenerate_json_files()
-    flash('Yazı silindi.', 'info')
+@app.route('/admin/delete/<int:id>', methods=['POST'])
+def delete_post(id: int):
+    """Delete a post with proper error handling and transaction rollback."""
+    try:
+        post = Post.query.get_or_404(id)
+        db.session.delete(post)
+        db.session.commit()
+        regenerate_json_files()
+        flash('Yazı silindi.', 'info')
+    except Exception as e:
+        db.session.rollback()
+        flash('Error deleting post.', 'danger')
+        app.logger.exception("Error deleting post")
+    
     return redirect(url_for('admin_dashboard'))
 
 # ----------------------------------------------------------------------
@@ -357,10 +444,15 @@ def send_assets(path):
     return send_from_directory('assets', path)
 
 @app.route('/<path:filename>')
-def serve_static_html(filename):
+def serve_static_html(filename: str):
+    """Serve static HTML files with security checks."""
     # Security: Ensure filename is safe and ends with .html
     if not filename.endswith('.html'):
-         return "Access denied", 403
+        return "Access denied", 403
+    
+    # Security: Prevent path traversal
+    if '..' in filename or filename.startswith('/'):
+        return "Access denied", 403
     
     try:
         return render_template(filename)

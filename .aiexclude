@@ -1,0 +1,26 @@
+# Image Files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.webp
+*.tiff
+*.ico
+*.bmp
+
+# Other binaries (just in case)
+*.mp4
+*.mp3
+*.wav
+*.pdf
+*.zip
+*.tar.gz
+*.exe
+*.dll
+
+# Optional: Explicitly ignore potentially heavy environments
+.git/
+__pycache__/
+.venv/
+venv/

@@ -13,6 +13,7 @@
 
     <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 
 <body class="theme-orange">
@@ -21,21 +22,27 @@
         <div class="container nav-container">
             <a href="index.html" class="logo">Ahmet Faruk Efe</a>
 
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="work.html" data-key="nav_work">My Works</a></li>
-                    <li><a href="insights.html" data-key="nav_insights">Technical Blogs</a></li>
-                    <li><a href="index.html" data-key="nav_home">Home</a></li>
-                    <li><a href="lifestyle.html" class="active" data-key="nav_lifestyle">Lifestyle</a></li>
-                    <li><a href="contact.html" data-key="nav_contact">Contact</a></li>
+            <nav aria-label="Main navigation">
+                <ul class="nav-links" role="menubar" aria-hidden="true">
+                    <li role="none"><a href="work.html" role="menuitem" data-key="nav_work">My Works</a></li>
+                    <li role="none"><a href="insights.html" role="menuitem" data-key="nav_insights">Technical Blogs</a></li>
+                    <li role="none"><a href="index.html" role="menuitem" data-key="nav_home">Home</a></li>
+                    <li role="none"><a href="lifestyle.html" class="active" role="menuitem" data-key="nav_lifestyle" aria-current="page">Lifestyle</a></li>
+                    <li role="none"><a href="contact.html" role="menuitem" data-key="nav_contact">Contact</a></li>
                 </ul>
             </nav>
 
-            <div class="lang-switch">
-                <button id="btn-en">EN</button>
-                <span class="divider">/</span>
-                <button id="btn-tr">TR</button>
+            <div class="lang-switch" role="group" aria-label="Language selection">
+                <button id="btn-en" aria-label="Switch to English" aria-pressed="false">EN</button>
+                <span class="divider" aria-hidden="true">/</span>
+                <button id="btn-tr" aria-label="Switch to Turkish" aria-pressed="false">TR</button>
             </div>
+
+            <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </button>
         </div>
     </header>
 

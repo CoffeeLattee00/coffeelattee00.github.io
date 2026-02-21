@@ -7,7 +7,7 @@ function renderArticle() {
     const currentLang = App.lang;
     const loadingEl = document.getElementById('loading');
     const containerEl = document.getElementById('article-container');
-    
+
     // Veri Dosyasını Belirle ve Çek
     let fetchKey = 'blog';
     let fetchUrl = 'assets/data/blog.json';
@@ -58,9 +58,30 @@ function renderArticle() {
                 // Direct Content (from Backend CMS)
                 if (item.content) {
                     const contentDiv = document.getElementById('art-content');
-                    // item.content is Markdown string
-                    contentDiv.innerHTML = marked.parse(item.content);
-                    
+
+                    // MathJax render sorununu çözmek için: Marked.js matematik sembollerini bozmasın diye koruyalım
+                    marked.setOptions({
+                        breaks: false, // Gereksiz satır atlamalarını engeller
+                        gfm: true // Github Flavored Markdown (Tablolar için gerekli)
+                    });
+
+                    // 1. Matematiksel ifadeleri geçici olarak sakla
+                    let mathBlocks = [];
+                    let protectedContent = item.content.replace(/(\$\$[\s\S]*?\$\$|\$.*?\$)/g, function (match) {
+                        mathBlocks.push(match);
+                        return `%%MATHBLOCK_${mathBlocks.length - 1}%%`;
+                    });
+
+                    // 2. Markdown'ı HTML'e çevir
+                    let htmlContent = marked.parse(protectedContent);
+
+                    // 3. Matematiksel ifadeleri tekrar geri koy
+                    htmlContent = htmlContent.replace(/%%MATHBLOCK_(\d+)%%/g, function (match, index) {
+                        return mathBlocks[index];
+                    });
+
+                    contentDiv.innerHTML = htmlContent;
+
                     generateTOC();
                     MathJax.typesetPromise();
 
@@ -116,7 +137,7 @@ function generateTOC() {
 
     if (headers.length === 0) {
         const container = document.querySelector('.toc-container');
-        if(container) container.style.display = 'none';
+        if (container) container.style.display = 'none';
     } else {
         let counts = [0, 0, 0]; // h1, h2, h3 counters
 
@@ -125,11 +146,11 @@ function generateTOC() {
 
             // Determine level
             const level = parseInt(header.tagName.substring(1));
-            
+
             // Nested numbering logic
             // Assuming h1 is level 1, h2 level 2, h3 level 3
             // Since most articles might start with h2 if Title is h1 (outside content), logic handles that.
-            
+
             if (level === 1) {
                 counts[0]++;
                 counts[1] = 0;
@@ -152,21 +173,21 @@ function generateTOC() {
             if (level >= 3 && counts[2] > 0) {
                 numStr += counts[2] + ".";
             }
-            
+
             // If only h2 and h3 are used, and h1 count is 0, we might want to start numbering from h2 as top level.
             // But strict hierarchical numbering is usually safer. 
             // Let's refine: If h1 never appears, we shouldn't prefix '0.'.
-            
+
             // Refined Logic for display:
             let displayNum = "";
             if (level === 1) displayNum = `${counts[0]}.`;
             else if (level === 2) {
-                if(counts[0] > 0) displayNum = `${counts[0]}.${counts[1]}.`;
+                if (counts[0] > 0) displayNum = `${counts[0]}.${counts[1]}.`;
                 else displayNum = `${counts[1]}.`;
             }
             else if (level === 3) {
-                if(counts[0] > 0) displayNum = `${counts[0]}.${counts[1]}.${counts[2]}.`;
-                else if(counts[1] > 0) displayNum = `${counts[1]}.${counts[2]}.`;
+                if (counts[0] > 0) displayNum = `${counts[0]}.${counts[1]}.${counts[2]}.`;
+                else if (counts[1] > 0) displayNum = `${counts[1]}.${counts[2]}.`;
                 else displayNum = `${counts[2]}.`;
             }
 
