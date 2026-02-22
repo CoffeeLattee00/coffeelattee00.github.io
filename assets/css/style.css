@@ -1633,19 +1633,24 @@ model-viewer {
   cursor: pointer;
   z-index: 1001;
   /* Above mobile menu overlay */
+  background: transparent;
+  border: none;
+  padding: 0;
+  outline: none;
 }
 
 .hamburger .line {
-  width: 25px;
-  height: 3px;
+  width: 26px;
+  height: 2px;
   background-color: var(--text-primary);
-  margin: 5px;
-  transition: all 0.3s ease;
+  margin: 6px auto;
+  border-radius: 4px;
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s ease, opacity 0.2s ease;
 }
 
 /* Hamburger Animation Stages */
 .hamburger.toggle .line:nth-child(1) {
-  transform: rotate(-45deg) translate(-5px, 6px);
+  transform: translateY(8px) rotate(45deg);
   background-color: var(--accent-color);
 }
 
@@ -1654,7 +1659,7 @@ model-viewer {
 }
 
 .hamburger.toggle .line:nth-child(3) {
-  transform: rotate(45deg) translate(-5px, -6px);
+  transform: translateY(-8px) rotate(-45deg);
   background-color: var(--accent-color);
 }
 
@@ -1752,11 +1757,16 @@ model-viewer {
 
   /* Hamburger Position */
   .hamburger {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
   }
 
   /* Language Switch Position */

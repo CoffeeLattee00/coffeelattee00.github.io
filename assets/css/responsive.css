@@ -378,6 +378,11 @@ main {
     flex-direction: column;
     background: transparent;
     border: none;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: none;
+    padding: 0;
     position: relative;
     right: auto;
     top: auto;
