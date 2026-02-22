@@ -290,13 +290,22 @@ main {
   }
 
   /* --- Lifestyle Page --- */
-  .lifestyle-grid {
+  .lifestyle-zones-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 20px;
   }
 
-  .ls-card {
-    padding: var(--spacing-lg) var(--spacing-md);
+  .zone-card {
+    height: 300px;
+    /* Smaller height on mobile */
+  }
+
+  .zone-card-title {
+    font-size: 1.5rem;
+  }
+
+  .zone-card-desc {
+    font-size: 0.95rem;
   }
 
   /* --- 3D Model Viewer --- */
@@ -366,6 +375,9 @@ main {
 
   .hamburger {
     display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: none;
     position: relative;
     right: auto;
     top: auto;

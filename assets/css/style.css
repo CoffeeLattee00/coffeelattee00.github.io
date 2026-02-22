@@ -44,7 +44,17 @@ body {
   font-family: var(--font-main);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+}
 
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -10;
   /* Shared Background for all pages */
   background-image:
     linear-gradient(to bottom,
@@ -55,7 +65,6 @@ body {
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
 ul {
@@ -320,8 +329,9 @@ a {
   left: 5%;
   right: auto;
   bottom: 0;
-  height: 85%;
-  width: 40vw;
+  height: 80%;
+  width: 35vw;
+  max-width: 450px;
   /* Yarı genişliği geçmesini engeller ve sabitler */
   z-index: 1;
   display: flex;
@@ -837,44 +847,104 @@ model-viewer {
 /* ========================
    LIFESTYLE SECTIONS
    ======================== */
-.lifestyle-grid {
+/* Lifestyle Modular Zones */
+.lifestyle-zones-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
+  width: 100%;
 }
 
-.ls-card {
-  text-align: center;
-  padding: 40px 20px;
-  background: linear-gradient(145deg, #0a4273 0%, #0b1226 100%);
-  /* Brand to Bg */
-  border-radius: 12px;
-  border: 1px solid rgba(65, 217, 217, 0.1);
-  transition: 0.3s;
+.zone-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 400px;
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.ls-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--accent-color);
-  box-shadow: 0 10px 25px rgba(10, 66, 115, 0.3);
+.zone-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(65, 217, 217, 0.3);
+  border-color: rgba(65, 217, 217, 0.5);
 }
 
-.ls-icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
+.zone-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(10, 10, 15, 0.95) 0%, rgba(10, 10, 15, 0.4) 50%, rgba(10, 10, 15, 0.1) 100%);
+  z-index: 1;
+  transition: background 0.4s ease;
+}
+
+.zone-card:hover .zone-card-overlay {
+  background: linear-gradient(to top, rgba(10, 10, 15, 0.98) 0%, rgba(10, 66, 115, 0.5) 60%, rgba(10, 10, 15, 0.2) 100%);
+}
+
+.zone-card-content {
+  position: relative;
+  z-index: 2;
+  padding: 30px;
+  width: 100%;
+}
+
+.zone-card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  transition: color 0.3s ease;
+}
+
+.zone-card:hover .zone-card-title {
   color: var(--accent-color);
 }
 
-.ls-title {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: var(--text-primary);
-  line-height: 1.4;
+.zone-card-desc {
+  font-size: 1.05rem;
+  color: rgba(240, 242, 245, 0.85);
+  line-height: 1.6;
+  margin-bottom: 25px;
+  opacity: 0.9;
 }
 
-.ls-card p {
-  font-size: 0.95rem;
-  color: rgba(240, 242, 245, 0.7);
+.zone-card-btn-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.zone-card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.zone-card-btn svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.zone-card:hover .zone-card-btn svg {
+  transform: translateX(5px);
 }
 
 /* ========================
