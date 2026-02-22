@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, send_from_directory
+from flask import Flask, render_template, request, redirect, flash, url_for, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from slugify import slugify
-from typing import Optional, Dict, List
+from typing import Optional, Dict
 from werkzeug.datastructures import FileStorage
 import os
 import json
@@ -268,7 +268,7 @@ def new_post():
                 content_en = process_markdown_images(raw, image_mapping)
 
             # DB Save
-            post = Post(
+            post = Post(  # type: ignore
                 slug=slug, category=category, publish_date=publish_date,
                 cover_image=cover_path,
                 title_tr=title_tr, summary_tr=summary_tr, content_tr=content_tr,
@@ -285,7 +285,7 @@ def new_post():
         except ValueError as e:
             flash(f'Input error: {str(e)}', 'danger')
             app.logger.warning(f"Validation error in new_post: {e}")
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash('Server error while creating content.', 'danger')
             app.logger.exception("Error creating post")
@@ -347,7 +347,7 @@ def edit_post(id):
                     # Old dir didn't exist, just create new
                     os.makedirs(new_upload_dir, exist_ok=True)
             else:
-                 os.makedirs(new_upload_dir, exist_ok=True)
+                os.makedirs(new_upload_dir, exist_ok=True)
 
             # --- Images Update ---
             if 'cover_image' in request.files:
@@ -391,7 +391,7 @@ def edit_post(id):
         except ValueError as e:
             flash(f'Input error: {str(e)}', 'danger')
             app.logger.warning(f"Validation error in edit_post: {e}")
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash('Server error while updating content.', 'danger')
             app.logger.exception("Error editing post")
@@ -424,7 +424,7 @@ def delete_post(id: int):
         db.session.commit()
         regenerate_json_files()
         flash('Yazı silindi.', 'info')
-    except Exception as e:
+    except Exception:
         db.session.rollback()
         flash('Error deleting post.', 'danger')
         app.logger.exception("Error deleting post")

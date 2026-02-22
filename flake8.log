@@ -1,0 +1,96 @@
+﻿app.py:1:1: F401 'flask.jsonify' imported but unused
+app.py:1:80: E501 line too long (105 > 79 characters)
+app.py:5:1: F401 'typing.List' imported but unused
+app.py:23:80: E501 line too long (115 > 79 characters)
+app.py:30:80: E501 line too long (90 > 79 characters)
+app.py:45:1: E302 expected 2 blank lines, found 1
+app.py:49:80: E501 line too long (88 > 79 characters)
+app.py:71:37: W291 trailing whitespace
+app.py:74:40: E261 at least two spaces before inline comment
+app.py:75:1: W293 blank line contains whitespace
+app.py:83:57: E261 at least two spaces before inline comment
+app.py:93:1: E302 expected 2 blank lines, found 1
+app.py:103:80: E501 line too long (101 > 79 characters)
+app.py:105:1: W293 blank line contains whitespace
+app.py:108:1: W293 blank line contains whitespace
+app.py:111:1: W293 blank line contains whitespace
+app.py:117:1: E302 expected 2 blank lines, found 1
+app.py:124:1: E302 expected 2 blank lines, found 1
+app.py:128:1: W293 blank line contains whitespace
+app.py:137:1: E302 expected 2 blank lines, found 1
+app.py:141:1: W293 blank line contains whitespace
+app.py:145:1: W293 blank line contains whitespace
+app.py:152:1: E302 expected 2 blank lines, found 1
+app.py:156:1: W293 blank line contains whitespace
+app.py:162:1: W293 blank line contains whitespace
+app.py:165:1: E302 expected 2 blank lines, found 1
+app.py:165:80: E501 line too long (83 > 79 characters)
+app.py:169:1: W293 blank line contains whitespace
+app.py:184:1: W293 blank line contains whitespace
+app.py:191:1: E302 expected 2 blank lines, found 1
+app.py:195:1: W293 blank line contains whitespace
+app.py:198:1: W293 blank line contains whitespace
+app.py:202:1: W293 blank line contains whitespace
+app.py:205:1: W293 blank line contains whitespace
+app.py:208:80: E501 line too long (90 > 79 characters)
+app.py:209:1: W293 blank line contains whitespace
+app.py:210:80: E501 line too long (132 > 79 characters)
+app.py:212:1: E302 expected 2 blank lines, found 1
+app.py:217:1: W293 blank line contains whitespace
+app.py:221:80: E501 line too long (81 > 79 characters)
+app.py:222:1: W293 blank line contains whitespace
+app.py:225:1: W293 blank line contains whitespace
+app.py:229:1: W293 blank line contains whitespace
+app.py:238:1: W293 blank line contains whitespace
+app.py:240:80: E501 line too long (88 > 79 characters)
+app.py:256:80: E501 line too long (80 > 79 characters)
+app.py:260:80: E501 line too long (104 > 79 characters)
+app.py:263:1: W293 blank line contains whitespace
+app.py:266:80: E501 line too long (104 > 79 characters)
+app.py:274:80: E501 line too long (80 > 79 characters)
+app.py:279:1: W293 blank line contains whitespace
+app.py:281:1: W293 blank line contains whitespace
+app.py:288:9: F841 local variable 'e' is assigned to but never used
+app.py:292:1: W293 blank line contains whitespace
+app.py:295:1: E302 expected 2 blank lines, found 1
+app.py:298:1: W293 blank line contains whitespace
+app.py:303:80: E501 line too long (96 > 79 characters)
+app.py:304:1: W293 blank line contains whitespace
+app.py:312:1: W293 blank line contains whitespace
+app.py:317:80: E501 line too long (93 > 79 characters)
+app.py:318:1: W293 blank line contains whitespace
+app.py:322:1: W293 blank line contains whitespace
+app.py:325:80: E501 line too long (102 > 79 characters)
+app.py:326:1: W293 blank line contains whitespace
+app.py:329:1: W293 blank line contains whitespace
+app.py:335:1: W293 blank line contains whitespace
+app.py:338:80: E501 line too long (81 > 79 characters)
+app.py:339:1: W293 blank line contains whitespace
+app.py:341:80: E501 line too long (102 > 79 characters)
+app.py:343:80: E501 line too long (100 > 79 characters)
+app.py:345:80: E501 line too long (100 > 79 characters)
+app.py:350:18: E111 indentation is not a multiple of 4
+app.py:350:18: E117 over-indented
+app.py:363:80: E501 line too long (80 > 79 characters)
+app.py:366:1: W293 blank line contains whitespace
+app.py:368:80: E501 line too long (104 > 79 characters)
+app.py:374:80: E501 line too long (89 > 79 characters)
+app.py:377:80: E501 line too long (104 > 79 characters)
+app.py:383:80: E501 line too long (89 > 79 characters)
+app.py:387:1: W293 blank line contains whitespace
+app.py:390:1: W293 blank line contains whitespace
+app.py:394:9: F841 local variable 'e' is assigned to but never used
+app.py:399:80: E501 line too long (86 > 79 characters)
+app.py:401:80: E501 line too long (90 > 79 characters)
+app.py:408:80: E501 line too long (82 > 79 characters)
+app.py:416:5: E303 too many blank lines (3)
+app.py:416:80: E501 line too long (114 > 79 characters)
+app.py:418:1: E302 expected 2 blank lines, found 1
+app.py:427:5: F841 local variable 'e' is assigned to but never used
+app.py:431:1: W293 blank line contains whitespace
+app.py:438:1: E302 expected 2 blank lines, found 1
+app.py:442:1: E302 expected 2 blank lines, found 1
+app.py:446:1: E302 expected 2 blank lines, found 1
+app.py:452:1: W293 blank line contains whitespace
+app.py:456:1: W293 blank line contains whitespace
+app.py:465:1: E305 expected 2 blank lines after class or function definition, found 1
