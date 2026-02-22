@@ -51,7 +51,11 @@ function renderArticle() {
                 }
 
                 document.getElementById('art-title').innerText = item.title;
-                document.getElementById('art-date').innerText = item.date || item.category || "Project";
+                const artDateEl = document.getElementById('art-date');
+                if (artDateEl) {
+                    artDateEl.innerText = item.date || item.category || "Project";
+                }
+
                 document.getElementById('art-img').src = item.image;
                 document.title = item.title + " - Ahmet Faruk Efe";
 
@@ -83,7 +87,10 @@ function renderArticle() {
                     contentDiv.innerHTML = htmlContent;
 
                     generateTOC();
-                    MathJax.typesetPromise();
+
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise().catch(err => console.error(err));
+                    }
 
                     loadingEl.style.display = 'none';
                     containerEl.style.display = 'block';
@@ -105,7 +112,10 @@ function renderArticle() {
                             contentDiv.innerHTML = marked.parse(fixedMarkdown);
 
                             generateTOC();
-                            MathJax.typesetPromise();
+
+                            if (window.MathJax && window.MathJax.typesetPromise) {
+                                window.MathJax.typesetPromise().catch(err => console.error(err));
+                            }
 
                             loadingEl.style.display = 'none';
                             containerEl.style.display = 'block';

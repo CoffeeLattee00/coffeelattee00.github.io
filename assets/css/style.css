@@ -1210,37 +1210,59 @@ model-viewer {
 /* Üst Kısım: Başlık, Tarih, Görsel */
 .article-header {
   text-align: center;
+  /* Başlığı tekrar ortalayalım */
   max-width: 900px;
   margin: 0 auto 30px auto;
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Tarihi sola yaslamak için */
+}
+
+.article-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 25px;
+  letter-spacing: -1px;
+  text-align: center;
+  /* Sadece başlık ortalı olsun */
+  align-self: center;
+  /* Flex container içinde tam ortada dursun */
 }
 
 .article-meta {
-  font-size: 0.95rem;
+  font-size: 1.5rem;
+  /* Tarih çok daha büyük */
   color: var(--accent-color);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 15px;
-}
-
-.article-title {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.2;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+  text-align: left;
+  /* Tarih tam sola yaslı */
+  align-self: flex-start;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
 }
 
 .article-cover {
   width: 100%;
-  max-width: 900px;
-  max-height: 450px;
-  object-fit: cover;
-  border-radius: 20px;
-  margin: 0 auto 50px auto;
+  max-width: 500px;
+  /* Görsel belirgin ölçüde orantılı olarak küçültüldü */
+  height: auto;
+  /* max-height kullanmadım, yukarı/aşağı kesme yapmayacak */
+  object-fit: contain;
+  /* Görseli bozmadan orantılı tut */
+  border-radius: 12px;
+  margin: 0 auto 30px auto;
   display: block;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  align-self: center;
+  /* Flex içinde tam ortaya koy */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .article-container-wrapper {
@@ -1385,18 +1407,60 @@ model-viewer {
   line-height: 1.3;
 }
 
+/* CSS Sayacı Tanımlamaları */
+.markdown-content {
+  counter-reset: h1counter;
+  /* Diğer flex vb özellikleri bozmamak için bunlar kalıyor: */
+  flex: 1;
+  min-width: 0;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+  max-width: 850px;
+  margin: 0 auto;
+}
+
 .markdown-content h1 {
-  font-size: 2.2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 2.4rem;
+  color: var(--accent-color);
+  /* Tema Rengi */
+  border-bottom: 2px solid rgba(65, 217, 217, 0.2);
   padding-bottom: 0.5rem;
+  counter-reset: h2counter;
+  /* Alt başlıklar sıfırlanıyor */
+}
+
+/* H1 için Sayaç */
+.markdown-content h1::before {
+  counter-increment: h1counter;
+  content: counter(h1counter) ". ";
 }
 
 .markdown-content h2 {
   font-size: 1.8rem;
+  counter-reset: h3counter;
+}
+
+/* H2 için Sayaç (1.1) */
+.markdown-content h2::before {
+  counter-increment: h2counter;
+  content: counter(h1counter) "." counter(h2counter) ". ";
+  color: var(--accent-color);
+  opacity: 0.8;
+  margin-right: 5px;
 }
 
 .markdown-content h3 {
   font-size: 1.5rem;
+}
+
+/* H3 için Sayaç (1.1.1) */
+.markdown-content h3::before {
+  counter-increment: h3counter;
+  content: counter(h1counter) "." counter(h2counter) "." counter(h3counter) ". ";
+  color: var(--accent-color);
+  opacity: 0.6;
+  margin-right: 5px;
 }
 
 .markdown-content p {
